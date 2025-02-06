@@ -1,0 +1,12 @@
+{% extends 'quotes/base.html' %}
+{% load static %}
+
+{% block title %}Taylor Swift Quotes{% endblock %}
+
+{% block content %}
+    <div class="quote-container">
+        <img class="quote-img" src="{% static 'images/' %}{{ image }}" alt="Taylor Swift">
+        <p class="quote">"{{ quote }}"</p>
+        <p class="author">- Taylor Swift</p>
+    </div>
+{% endblock %}
