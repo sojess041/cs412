@@ -1,0 +1,65 @@
+<!-- restaurant/templates/restaurant/main.html -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jollibee</title>
+    <link rel="stylesheet" href="{% static 'css/resto_style.css' %}">
+
+
+
+    <link rel="stylesheet" href="https://use.typekit.net/wel0tkn.css">
+    <link rel="stylesheet" href="https://use.typekit.net/uhw4wfg.css">
+</head>
+
+<body>
+    <header>
+        <h1>Welcome to Jollibee!</h1>
+    </header>
+
+    <nav>
+        <a href="{% url 'order' %}">Order Now</a> | 
+        <a href="{% url 'home' %}">Home</a>  
+    </nav>
+    
+    
+    {% if request.resolver_match.url_name == "home" %}
+    <div class="jollibee-image">
+        <img src="{% static 'images/jollibee.png' %}" alt="Jollibee Food" width="600">
+    </div>
+    {% endif %}
+
+
+    <div class="content">
+        {% block content %}
+        <h1>About Us</h1>
+        <h3>Jollibee is a Filipino-owned food chain known for its delicious fried chicken and unique flavors.</h3>
+
+        <h2>📍 Location</h2>
+        <p>609 8th Ave, New York, NY 10018</p>
+
+        <h2>Hours of Operation</h2>
+        <table>
+            <tr>
+                <th>Day</th>
+                <th>Time</th>
+            </tr>
+            <tr><td>Sunday</td><td>7am - 10pm</td></tr>
+            <tr><td>Monday</td><td>6am - 10pm</td></tr>
+            <tr><td>Tuesday</td><td>6am - 10pm</td></tr>
+            <tr><td>Wednesday</td><td>6am - 10pm</td></tr>
+            <tr><td>Thursday</td><td>6am - 10pm</td></tr>
+            <tr><td>Friday</td><td>6am - 12am</td></tr>
+            <tr><td>Saturday</td><td>6am - 12am</td></tr>
+        </table>
+        {% endblock %}
+    </div>
+
+    <footer>
+        <p>© 2025 Jollibee. All rights reserved.</p>
+    </footer>
+</body>
+</html>
