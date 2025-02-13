@@ -23,7 +23,7 @@ def submit_order(request):
         phone = request.POST.get("phone")
         email = request.POST.get("email")
         instructions = request.POST.get("instructions")
-
+        print("change")
 
         menu_options = {
             "Chickenjoy": 10,
