@@ -47,7 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "formdata", 
-    "restaurant", #NEW
+    "restaurant",
+    "blog",
+    "mini_fb", #new
     
     
 ]

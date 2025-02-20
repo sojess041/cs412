@@ -13,7 +13,7 @@ def main_page(request):
  
 def order_form(request):
     specials = ["Burger Meal ($8)", "Pasta Combo ($9)", "Chicken Platter ($12)", "Kids Chicken Meal ($10)"]
-    daily_special = random.choice(specials)  # 🎲 Select a random special
+    daily_special = random.choice(specials)  
 
     context = {"daily_special": daily_special}
     return render(request, "restaurant/order.html", context)
