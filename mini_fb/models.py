@@ -7,7 +7,8 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=50, blank=False)  
     city = models.CharField(max_length=100, blank=True)  
     email = models.EmailField(unique=True)  
-    profilepic = models.URLField(blank=True) 
+    profilepic = models.URLField(blank=True)
+
 
     def __str__(self):
         '''Return a formatted string representation of the user'''
