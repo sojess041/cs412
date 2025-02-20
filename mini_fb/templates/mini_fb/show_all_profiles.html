@@ -5,6 +5,8 @@
     <h2>All Profiles</h2>
 
     {% if profiles %}
+
+    <!-- Table to display all profiles-->
     <table>
         <thead>
             <tr>
@@ -15,16 +17,20 @@
                 <th>Email</th>
             </tr>
         </thead>
+
+        <!-- Go through each profile and display their details-->
         <tbody>
             {% for profile in profiles %}
             <tr>
                
                 <td>
+                    <!-- Click on user's profile which is linked to their page-->
                     <a href="{% url 'show_profile' profile.pk %}">
                         <img src="{{ profile.profilepic }}" alt="{{ profile.first_name }}'s Profile Picture" width="80" height="80">
                     </a>
                 </td>
 
+                <!-- Click on user's name to visit profile page-->
                 
                 <td>
                     <a href="{% url 'show_profile' profile.pk %}">
