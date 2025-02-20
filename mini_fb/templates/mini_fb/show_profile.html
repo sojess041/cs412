@@ -1,0 +1,20 @@
+<!--Render a profile page for one user-->
+
+{% extends "mini_fb/base.html" %}
+
+{% block title %}{{ profile.first_name }} {{ profile.last_name }}{% endblock %}
+
+{% block content %}
+<!-- Profile HEADER-->
+    <h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
+
+    <!-- Profile PICTURE-->
+    <img src="{{ profile.profilepic }}" alt="{{ profile.first_name }}'s Profile Picture" width="150" height="150">
+
+    <!-- Profile DETAILS (city, email)-->
+    <p><strong>City:</strong> {{ profile.city }}</p>
+    <p><strong>Email:</strong> {{ profile.email }}</p>
+
+    <!-- Link back to display all profiles-->
+    <a href="{% url 'show_all_profiles' %}">Back to Profiles</a>
+{% endblock %}

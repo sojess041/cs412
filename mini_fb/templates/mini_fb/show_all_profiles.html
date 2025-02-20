@@ -17,12 +17,21 @@
         </thead>
         <tbody>
             {% for profile in profiles %}
-            <tr> 
+            <tr>
+               
                 <td>
-                    <img src="{{ profile.profilepic }}" alt="{{ profile.first_name }}'s Profile Picture" style="width: 100px; height: auto; object-fit: cover;">
-
+                    <a href="{% url 'show_profile' profile.pk %}">
+                        <img src="{{ profile.profilepic }}" alt="{{ profile.first_name }}'s Profile Picture" width="80" height="80">
+                    </a>
                 </td>
-                <td>{{ profile.first_name }}</td>
+
+                
+                <td>
+                    <a href="{% url 'show_profile' profile.pk %}">
+                        {{ profile.first_name }}
+                    </a>
+                </td>
+
                 <td>{{ profile.last_name }}</td>
                 <td>{{ profile.city }}</td>
                 <td>{{ profile.email }}</td>
@@ -30,8 +39,9 @@
             {% endfor %}
         </tbody>
     </table>
+
     {% else %}
-        <p>No Profiles found.</p>
+    <p>No Profiles found.</p>
     {% endif %}
 
 {% endblock %}

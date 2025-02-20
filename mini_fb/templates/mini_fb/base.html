@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Mini FB{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles-minifb.css' %}">
 </head>
 <body>
 
@@ -15,8 +15,7 @@
 
     <nav>
         <a href="{% url 'show_all_profiles' %}">All Profiles</a>
-        <a href="#">Home</a>
-        <a href="#">About</a>
+      
     </nav>
 
     {% block content %}
