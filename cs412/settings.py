@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     "formdata", 
     "restaurant",
     "blog",
-    "mini_fb", #new
+    "mini_fb"
     
     
 ]
