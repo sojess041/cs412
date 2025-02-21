@@ -15,7 +15,9 @@ class ShowAllProfilesView(ListView):
 
     def get_queryset(self):
         '''retrieve all profile objects from the database'''
-        return Profile.objects.all() 
+        queryset = Profile.objects.all()
+        print("Profiles in DB:", queryset) 
+        return queryset
 
 class ShowProfilePageView(DetailView): 
     '''Obtain data for one Profile record'''
