@@ -65,3 +65,6 @@ class CreateStatusMessageView(CreateView):
         new_status.profile = profile  # Assign the profile to the status message
         new_status.save()
         return redirect('show_profile', pk=profile.pk)
+
+
+    
