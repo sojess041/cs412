@@ -1,0 +1,19 @@
+<!--blog/create_comment_form.html-->
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
+<h1>Create a new Comment about {{article.title}}</h1>
+
+
+<form method = "POST">
+    {% csrf_token %} 
+    <table>
+{{form.as_table}}
+</table>
+
+<input type="submit" name = "Submie" view = "Submit">
+</form>
+
+{% endblock %}
+

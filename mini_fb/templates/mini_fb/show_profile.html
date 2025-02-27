@@ -1,20 +1,38 @@
-<!--Render a profile page for one user-->
-
 {% extends "mini_fb/base.html" %}
 
 {% block title %}{{ profile.first_name }} {{ profile.last_name }}{% endblock %}
 
 {% block content %}
 <!-- Profile HEADER-->
-    <h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
+<h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
 
-    <!-- Profile PICTURE-->
-    <img src="{{ profile.profilepic }}" alt="{{ profile.first_name }}'s Profile Picture" width="150" height="150">
+<!-- Profile PICTURE-->
+<img src="{{ profile.profilepic }}" alt="{{ profile.first_name }}'s Profile Picture" width="150" height="150">
 
-    <!-- Profile DETAILS (city, email)-->
-    <p><strong>City:</strong> {{ profile.city }}</p>
-    <p><strong>Email:</strong> {{ profile.email }}</p>
+<!-- Profile DETAILS (city, email)-->
+<p><strong>City:</strong> {{ profile.city }}</p>
+<p><strong>Email:</strong> {{ profile.email }}</p>
 
-    <!-- Link back to display all profiles-->
-    <a href="{% url 'show_all_profiles' %}">Back to Profiles</a>
+<!-- Status Messages Section -->
+<h3>Status Messages</h3>
+
+{% if status_messages %}
+    <ul style="list-style-type: none; padding: 0;">
+        {% for status in status_messages %}
+      
+                <p style="font-size: 16px; margin: 0;">{{ status.message }}</p>
+                <br>
+                <small style="display: block; text-align: center; color: rgb(255, 255, 255);">
+                    {{ status.timestamp|date:"F j, Y, g:i a" }}
+                </small>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No status messages yet.</p>
+{% endif %}
+
+<!-- Link back to display all profiles-->
+<a href="{% url 'show_all_profiles' %}">Back to Profiles</a>
+
 {% endblock %}
