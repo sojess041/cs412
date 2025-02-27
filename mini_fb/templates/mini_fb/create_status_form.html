@@ -1,0 +1,25 @@
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+
+<h1>Create a New Status Message for {{ profile.first_name }} {{ profile.last_name }}</h1>
+
+<form method="POST" action="{% url 'add_status' profile.pk %}" style="max-width: 500px; margin: auto; padding: 20px; background: white; border-radius: 8px;">
+    {% csrf_token %}
+    
+    <label for="id_message" style="font-weight: bold;">Status Message:</label>
+    {{ form.message }}
+    
+    <br><br>
+    
+    <button type="submit" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
+        Post Status
+    </button>
+
+    <a href="{% url 'show_profile' profile.pk %}" 
+       style="margin-left: 10px; text-decoration: none; color: red;">
+        Cancel
+    </a>
+</form>
+
+{% endblock %}
