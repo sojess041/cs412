@@ -6,12 +6,13 @@
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }} 
-
-    <!-- Image Upload Field -->
-    <input type="file" name="files" multiple>
+    {{ form.as_p }}
     
-    <button type="submit">Post Message</button>
+    <label for="files">Upload Image (optional)</label>
+    <input type="file" name="files" multiple> <!-- Allows selecting multiple images -->
+    
+    <button type="submit">Post Status</button>
 </form>
+
 
 {% endblock %}

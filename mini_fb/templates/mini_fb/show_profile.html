@@ -2,38 +2,27 @@
 
 {% block content %}
     <h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
+    <img src="{{ profile.image_file.url }}" alt="{{ profile.first_name }}'s Profile Picture" width="150" height="150">
 
-
-
-    <!-- Profile PICTURE -->
-    {% if profile.image_file %}
-        <img src="{{ profile.image_file.url }}" alt="{{ profile.first_name }}'s Profile Picture" width="150" height="150">
-    {% else %}
-        <p>No profile picture available.</p>
-    {% endif %}
-
-    
     <p>City: {{ profile.city }}</p>
     <p>Email: {{ profile.email }}</p>
 
     <h3><a href="{% url 'add_status' profile.pk %}">Add a Status Message</a></h3>
+    <a href="{% url 'update_profile' pk=profile.pk %}">Update Profile</a>
 
     <h3>Status Messages</h3>
-    {% for status in profile.statusmessage_set.all %}
-
-    
-
-        <p>"{{ status.text }}"</p>
-        <small>{{ status.created_at|date:"F j, Y, g:i a" }}</small>
-
-        <!-- Display images associated with the status -->
+    {% for st_msg in profile.statusmessage_set.all %}
+        <div class="status-message">
+            <p>{{ st_msg.text }} - {{ st_msg.created_at }}</p>
+            <a href="{% url 'update_status' pk=st_msg.pk %}">Update</a>
+            <a href="{% url 'delete_status' pk=st_msg.pk %}">Delete</a>
+        </div>
         <div>
-        {% for status_image in status.statusimage_set.all %}
-            <img src="{{ status_image.image.image_file.url }}" alt="Status Image" width="200">
-        {% endfor %}
-    </div>
+            {% for status_image in st_msg.statusimage_set.all %}
+                <img src="{{ status_image.image.image_file.url }}" alt="Status Image" width="200">
+            {% endfor %}
+        </div>
     {% empty %}
         <p>No status messages yet.</p>
     {% endfor %}
-
 {% endblock %}

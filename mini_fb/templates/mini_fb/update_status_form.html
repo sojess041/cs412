@@ -1,0 +1,18 @@
+{% extends "mini_fb/base.html" %}
+
+{% block content %}
+    <h2>Update Status Message</h2>
+    <p>"{{ status.text }}"</p>  <!-- Display the current status text -->
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Render the form fields -->
+        <button type="submit">Update Status</button>
+    </form>
+
+    <!-- Cancel the update and return to the profile page -->
+    <form action="{% url 'show_profile' pk=status.profile.pk %}" method="get">
+        <button type="submit">Cancel</button>
+    </form>
+    
+{% endblock %}

@@ -7,7 +7,7 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=50, blank=False)
     city = models.CharField(max_length=100, blank=True)
     email = models.EmailField(unique=True)
-    image_file = models.ImageField(upload_to='profile_images/', blank=True, null=True)  # <-- ImageField for profile picture
+    image_file = models.ImageField(upload_to='profile_images/', blank=True, null=True) 
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} ({self.email})'
@@ -23,7 +23,7 @@ class Image(models.Model):
 
 class StatusMessage(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    text = models.TextField()
+    text = models.CharField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f"Status by {self.profile} on {self.created_at}"
