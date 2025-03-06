@@ -1,18 +1,24 @@
 from django.contrib import admin
-from .models import Profile  
-from .models import StatusMessage
+from .models import Profile, StatusMessage, Image, StatusImage
 
-""""
-admin.py file that registers the Profile model with the Django admin site 
-"""
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'email', 'city', 'image_file')
+    search_fields = ('first_name', 'last_name', 'email')
+    ordering = ('last_name', 'first_name')
 
-admin.site.register(Profile)  
-
-
+@admin.register(StatusMessage)
 class StatusMessageAdmin(admin.ModelAdmin):
-    "Admin configuration for the StatusMessage model"
-    "customize the display of status messages in the django admin"
-    list_display = ('profile', 'timestamp', 'message')
-    search_fields = ('message', 'profile__user__username')
-    ordering = ('-timestamp',)
-admin.site.register(StatusMessage, StatusMessageAdmin)
+    list_display = ('profile', 'text', 'created_at')
+    ordering = ('-created_at',)
+
+@admin.register(Image)
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ("profile", "image_file", "uploaded_at")
+    search_fields = ('profile',)
+    ordering = ('-uploaded_at',)
+
+@admin.register(StatusImage)
+class StatusImageAdmin(admin.ModelAdmin):
+    list_display = ("status_message", "image")
+    search_fields = ('status_message', 'image')

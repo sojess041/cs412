@@ -2,31 +2,39 @@ from django.db import models
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 
-""""
-models.py file to degine the Profile model for mini_fb 
-"""
-
 class Profile(models.Model):
-    '''Attributes of FB users'''
-
-    first_name = models.CharField(max_length=50, blank=False)  #first name field
-    last_name = models.CharField(max_length=50, blank=False)  #last name field 
-    city = models.CharField(max_length=100, blank=True)  #city field 
-    email = models.EmailField(unique=True)  # email field 
-    profilepic = models.URLField(blank=True) #profile picture URL 
-
+    first_name = models.CharField(max_length=50, blank=False)
+    last_name = models.CharField(max_length=50, blank=False)
+    city = models.CharField(max_length=100, blank=True)
+    email = models.EmailField(unique=True)
+    image_file = models.ImageField(blank=True)
 
     def __str__(self):
-        '''Return a formatted string representation of the user'''
         return f'{self.first_name} {self.last_name} ({self.email})'
 
-class StatusMessage(models.Model):
-    "Represent status message for MINIFB"
-    timestamp = models.DateTimeField(default = now)
-    message = models.TextField()
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='status_messages')
-
+class Image(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    image_file = models.ImageField(upload_to='images/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        "Return a string representation of the StatusMessage"
-        return f"{self.profile.first_name} {self.profile.last_name} - {self.timestamp}: {self.message[:50]}"  # Display first 50 chars
+        return f"Image for {self.profile.first_name} {self.profile.last_name}"
+
+
+class StatusMessage(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"Status by {self.profile} on {self.created_at}"
+
+class StatusImage(models.Model):
+    status_message = models.ForeignKey(StatusMessage, on_delete=models.CASCADE)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Image for {self.status_message.text}"
+    
+    def get_images(self):
+        return StatusImage.objects.filter(status_message=self)
+

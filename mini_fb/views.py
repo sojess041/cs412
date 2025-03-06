@@ -2,8 +2,12 @@ from typing import Any
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView
-from .models import Profile, StatusMessage
+from .models import Profile, StatusMessage, Image
 from .forms import CreateStatusMessageForm
+from mini_fb.models import Profile, Image, StatusImage 
+from django.urls import reverse
+
+
 
 """
 Class-based views to display all profiles and individual profile pages.
@@ -23,18 +27,19 @@ class ShowAllProfilesView(ListView):
         return queryset
 
 
-class ShowProfilePageView(DetailView): 
+
+class ShowProfilePageView(DetailView):
     '''Obtain data for one Profile record'''
-    model = Profile  # Use profile model
-    template_name = "mini_fb/show_profile.html"  # HTML for single profile page
-    context_object_name = "profile"  # Context variable to access single profile data
+    model = Profile
+    template_name = "mini_fb/show_profile.html"
+    context_object_name = "profile"
 
     def get_context_data(self, **kwargs):
         '''Retrieve additional data (status messages and form) for the profile page'''
         context = super().get_context_data(**kwargs)
-        context["status_messages"] = self.object.status_messages.all()  # Get all status messages for this profile
+        context["status_messages"] = self.object.statusmessage_set.all()  # Corrected to use related_name
         context["form"] = CreateStatusMessageForm()  # Pass the form to the template
-        return context    
+        return context
 
     def post(self, request, *args, **kwargs):
         '''Handle form submission when a user posts a new status message'''
@@ -49,22 +54,16 @@ class ShowProfilePageView(DetailView):
 
         return self.get(request, *args, **kwargs)  # Re-render the page if the form is invalid
 
-
 class CreateStatusMessageView(CreateView):
-    """
-    View to handle creating a new status message.
-    """
-    model = StatusMessage
     form_class = CreateStatusMessageForm
     template_name = "mini_fb/create_status_form.html"
+    def form_valid(self,form):
+        "override the default method to add some debug info"
 
-    def form_valid(self, form):
-        """Assign the status message to the correct profile before saving."""
-        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
-        new_status = form.save(commit=False)
-        new_status.profile = profile  # Assign the profile to the status message
-        new_status.save()
-        return redirect('show_profile', pk=profile.pk)
+        print(f'CreateStatusForm: form._valid():{form.cleaned_data}')
+        return super().form_valid(form)
 
 
-    
+    def get_success_url(self):
+        """Redirect back to the profile page after posting."""
+        return reverse("show_profile", kwargs={"pk": self.kwargs.get("pk")})
