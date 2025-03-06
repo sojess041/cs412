@@ -41,15 +41,15 @@ class ShowProfilePageView(DetailView):
         context["form"] = CreateStatusMessageForm()  # Pass the form to the template
         return context
 
-    def post(self, request, *args, **kwargs):
+    #def post(self, request, *args, **kwargs):
         '''Handle form submission when a user posts a new status message'''
         self.object = self.get_object()  # Get the profile
         form = CreateStatusMessageForm(request.POST)
 
         if form.is_valid():
             new_status = form.save(commit=False)  
-            new_status.profile = self.object  # Assign the current profile
-            new_status.save()  # Save the message
+            new_status.profile = self.object  
+            new_status.save() 
             return redirect('show_profile', pk=self.object.pk)  
 
         return self.get(request, *args, **kwargs)  # Re-render the page if the form is invalid
@@ -57,13 +57,26 @@ class ShowProfilePageView(DetailView):
 class CreateStatusMessageView(CreateView):
     form_class = CreateStatusMessageForm
     template_name = "mini_fb/create_status_form.html"
-    def form_valid(self,form):
-        "override the default method to add some debug info"
+    
+    def form_valid(self, form):
+        # Get the profile associated with the form submission
+        pk = self.kwargs.get("pk")
+        profile = get_object_or_404(Profile, pk=pk)
+        
+        # Create the status message
+        new_status = form.save(commit=False)
+        new_status.profile = profile
+        new_status.save()
 
-        print(f'CreateStatusForm: form._valid():{form.cleaned_data}')
-        return super().form_valid(form)
+        # Handle the image file(s) from the form
+        files = self.request.FILES.getlist('files')  # Retrieve the uploaded files
+        for image_file in files:
+            image = Image(image_file=image_file, profile = profile)
+            image.save()  # Save the image
+            StatusImage.objects.create(status_message=new_status, image=image)
 
-
+        return redirect(self.get_success_url())  # Redirect to the profile page after saving the status and image
+    
     def get_success_url(self):
         """Redirect back to the profile page after posting."""
         return reverse("show_profile", kwargs={"pk": self.kwargs.get("pk")})

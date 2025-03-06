@@ -7,7 +7,7 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=50, blank=False)
     city = models.CharField(max_length=100, blank=True)
     email = models.EmailField(unique=True)
-    image_file = models.ImageField(blank=True)
+    image_file = models.ImageField(upload_to='profile_images/', blank=True, null=True)  # <-- ImageField for profile picture
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} ({self.email})'

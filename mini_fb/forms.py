@@ -6,5 +6,4 @@ class CreateStatusMessageForm(forms.ModelForm):
         model = StatusMessage
         fields = ['text']
 
-    # Remove ClearableFileInput, just use FileField and let the HTML input handle the 'multiple' attribute
-    files = forms.FileField(required=False)
+

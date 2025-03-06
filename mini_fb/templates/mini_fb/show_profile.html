@@ -1,55 +1,39 @@
-{% extends "mini_fb/base.html" %}
+{% extends 'mini_fb/base.html' %}
+
 {% block content %}
+    <h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
 
-<h2>{{ profile.first_name }} {{ profile.last_name }}</h2>
 
-<!-- Profile PICTURE-->
-{% if profile.image_file %}
-    <img src="{{ profile.image_file.url }}" alt="{{ profile.first_name }}'s Profile Picture" width="150" height="150">
-{% else %}
-    <p>No profile picture available.</p>
-{% endif %}
 
-<!-- Profile DETAILS (city, email)-->
-<p>City: {{ profile.city }}</p>
-<p>Email: {{ profile.email }}</p>
+    <!-- Profile PICTURE -->
+    {% if profile.image_file %}
+        <img src="{{ profile.image_file.url }}" alt="{{ profile.first_name }}'s Profile Picture" width="150" height="150">
+    {% else %}
+        <p>No profile picture available.</p>
+    {% endif %}
 
-<!-- Status Messages Section -->
-<h3>Add a Status Message</h3> 
-<form method="post" enctype="multipart/form-data" style="margin-bottom: 20px;">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
-        Post Message
-    </button>
-</form>
+    
+    <p>City: {{ profile.city }}</p>
+    <p>Email: {{ profile.email }}</p>
 
-<h3>Status Messages</h3>
-{% if status_messages %}
-    <ul style="list-style-type: none; padding: 0;">
-        {% for status in status_messages %}
-            <li>
-                <p style="font-size: 18px; margin: 0;">"{{ status.text }}"</p>
-                <small>{{ status.created_at|date:"F j, Y, g:i a" }}</small>
+    <h3><a href="{% url 'add_status' profile.pk %}">Add a Status Message</a></h3>
 
-                <!-- Display images associated with the status -->
-                {% if status.statusimage_set.all %}
-                    <div>
-                        {% for status_image in status.statusimage_set.all %}
-                            <img src="{{ status_image.image.image_file.url }}" alt="Status Image" width="200">
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p>No images attached.</p>
-                {% endif %}
-            </li>
+    <h3>Status Messages</h3>
+    {% for status in profile.statusmessage_set.all %}
+
+    
+
+        <p>"{{ status.text }}"</p>
+        <small>{{ status.created_at|date:"F j, Y, g:i a" }}</small>
+
+        <!-- Display images associated with the status -->
+        <div>
+        {% for status_image in status.statusimage_set.all %}
+            <img src="{{ status_image.image.image_file.url }}" alt="Status Image" width="200">
         {% endfor %}
-    </ul>
-{% else %}
-    <p>No status messages yet.</p>
-{% endif %}
-
-<!-- Link back to display all profiles -->
-<a href="{% url 'show_all_profiles' %}">Back to Profiles</a>
+    </div>
+    {% empty %}
+        <p>No status messages yet.</p>
+    {% endfor %}
 
 {% endblock %}

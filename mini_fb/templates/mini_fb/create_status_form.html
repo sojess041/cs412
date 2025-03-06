@@ -1,32 +1,17 @@
-{% extends 'mini_fb/base.html' %} <!-- Inherit from base.html -->
+{% extends 'mini_fb/base.html' %}
 
-{% block content %} 
+{% block content %}
 
-<h1>Create a New Status Message for {{ profile.first_name }} {{ profile.last_name }}</h1>
+<h2>Post a New Status Message for {{ profile.first_name }} {{ profile.last_name }}</h2>
 
-<!-- Define HTML <form> with enctype for file uploads -->
-    <form action="{% url 'create_status_form'}" method = "POST"></form>
-    <form method="POST" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }} 
 
-        {% csrf_token %}
-        {{ form.media }}
-        {{ form.as_p }}
-        <input type="file" name="files" id="image_files" multiple accept="image/*">
-        <button type="submit">Post Status</button>
-    </form>
-
-    <br><br>
-
-    <!-- Submit button -->
-    <button type="submit" style="background-color: #007bff; color: white; padding: 10px 15px; 
-                                  border: none; border-radius: 5px; cursor: pointer;">
-        Post Status
-    </button>
-
-    <a href="{% url 'show_profile' profile.pk %}" 
-       style="margin-left: 10px; text-decoration: none; color: red;">
-        Cancel
-    </a>
+    <!-- Image Upload Field -->
+    <input type="file" name="files" multiple>
+    
+    <button type="submit">Post Message</button>
 </form>
 
 {% endblock %}
