@@ -26,9 +26,9 @@
                     <!-- Click on user's profile which is linked to their page-->
                     <a href="{% url 'show_profile' profile.pk %}">
                         {% if profile.image_file %}
-                            <img src="{{ profile.image_file.url }}" alt="{{ profile.first_name }}'s Profile Picture" width="80" height="80">
+                            <img src="{{ profile.image_file.url }}" alt="" width="80" height="80">
                         {% else %}
-                            <p>No profile picture available.</p>
+                            No Image.
                         {% endif %}
                     </a>
                 </td>

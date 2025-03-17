@@ -11,6 +11,17 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} ({self.email})'
+    
+    def get_friends(self):
+        "returns a list representing the profile's friends"
+        friends_as_profile1 = Friend.objects.filter(profile1=self).values_list('profile2', flat=True)
+        friends_as_profile2 = Friend.objects.filter(profile2=self).values_list('profile1', flat=True)
+
+        friend_ids = list(friends_as_profile1) + list(friends_as_profile2)
+        return Profile.objects.filter(id__in=friend_ids)
+
+
+
 
 class Image(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
@@ -37,4 +48,14 @@ class StatusImage(models.Model):
     
     def get_images(self):
         return StatusImage.objects.filter(status_message=self)
+    
+
+class Friend(models.Model):
+    profile1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="friendships1")
+    profile2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="friendships2")
+    timestamp = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        return f"{self.profile1.first_name} {self.profile1.last_name} & {self.profile2.first_name} {self.profile2.last_name}"
+
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, StatusMessage, Image, StatusImage
+from .models import Profile, StatusMessage, Image, StatusImage, Friend
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -22,3 +22,10 @@ class ImageAdmin(admin.ModelAdmin):
 class StatusImageAdmin(admin.ModelAdmin):
     list_display = ("status_message", "image")
     search_fields = ('status_message', 'image')
+
+@admin.register(Friend)
+class FriendAdmin(admin.ModelAdmin):
+    list_dislay = ('profile1', 'profile2', 'timestamp')
+    list_filter = ('timestamp',)
+    search_fields = ('profile1__first_name', 'profile2__first_name')
+

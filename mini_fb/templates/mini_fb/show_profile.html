@@ -10,6 +10,24 @@
     <h3><a href="{% url 'add_status' profile.pk %}">Add a Status Message</a></h3>
     <a href="{% url 'update_profile' pk=profile.pk %}">Update Profile</a>
 
+
+    <h3>Friends</h3>
+    {% with friends=profile.get_friends %}
+        {% if friends %}
+            <ul>
+                {% for friend in friends %}
+                    <li>
+                        <a href="{% url 'show_profile' friend.pk %}">
+                            {{ friend.first_name }} {{ friend.last_name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No friends yet.</p>
+        {% endif %}
+    {% endwith %}
+
     <h3>Status Messages</h3>
     {% for st_msg in profile.statusmessage_set.all %}
         <div class="status-message">
