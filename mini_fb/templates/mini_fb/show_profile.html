@@ -7,6 +7,14 @@
     <p>City: {{ profile.city }}</p>
     <p>Email: {{ profile.email }}</p>
 
+    {% if request.user.is_authenticated and request.user.profile and request.user.profile != profile %}
+    <form action="{% url 'add_friend' request.user.profile.id profile.id %}" method="get">
+        <button type="submit">➕ Add Friend</button>
+    </form>
+    
+{% endif %}
+
+
     <h3><a href="{% url 'add_status' profile.pk %}">Add a Status Message</a></h3>
     <a href="{% url 'update_profile' pk=profile.pk %}">Update Profile</a>
 
@@ -28,6 +36,14 @@
         {% endif %}
     {% endwith %}
 
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{% url 'friend_suggestions' profile.id %}"
+   style="background-color: #132ac1; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">
+   🔍 Friend Suggestions
+</a>
+    </div>
+    
+
     <h3>Status Messages</h3>
     {% for st_msg in profile.statusmessage_set.all %}
         <div class="status-message">
@@ -42,5 +58,6 @@
         </div>
     {% empty %}
         <p>No status messages yet.</p>
+
     {% endfor %}
 {% endblock %}

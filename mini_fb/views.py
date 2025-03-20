@@ -11,12 +11,8 @@ from .models import Profile
 from .forms import UpdateProfileForm
 from django.views.generic.edit import DeleteView
 from .forms import UpdateStatusMessageForm
-
-
-
-
-
-
+from django.contrib import messages
+from django.views import View
 
 """
 Class-based views to display all profiles and individual profile pages.
@@ -44,10 +40,11 @@ class ShowProfilePageView(DetailView):
     context_object_name = "profile"
 
     def get_context_data(self, **kwargs):
-        '''Retrieve additional data (status messages and form) for the profile page'''
+        '''Retrieve additional data (status messages, friends, and form) for the profile page'''
         context = super().get_context_data(**kwargs)
-        context["status_messages"] = self.object.statusmessage_set.all()  # Corrected to use related_name
+        context["status_messages"] = self.object.statusmessage_set.all()  # Fetch status messages
         context["form"] = CreateStatusMessageForm()  # Pass the form to the template
+        context["friends"] = self.object.get_friends()  
         return context
 
     #def post(self, request, *args, **kwargs):
@@ -147,3 +144,59 @@ class UpdateStatusMessageView(UpdateView):
 
     def get_success_url(self):
         return reverse('show_profile', kwargs={'pk': self.object.profile.pk})
+    
+
+def add_friend_view(request, profile_id, friend_id):
+    """
+    Function-based view to add a friendship between two Profile instances.
+    Prevents self-friending and duplicate friendships.
+    """
+    profile = get_object_or_404(Profile, id=profile_id)
+    friend = get_object_or_404(Profile, id=friend_id)
+
+    if profile == friend:
+        messages.error(request, "You cannot befriend yourself!")
+    else:
+        existing_friend = Profile.add_friend(profile, friend)
+        if existing_friend:
+            messages.success(request, f"You are now friends with {friend.first_name}!")
+        else:
+            messages.warning(request, "Friendship already exists.")
+
+    return redirect('show_profile', pk=profile_id)
+
+class CreateFriendView(View):
+    "Add a friend using a URL"
+    
+    def dispatch(self, request, *args, **kwargs):
+        "Handles the request to add a friend using URL parameters"
+        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        other = get_object_or_404(Profile, pk=self.kwargs['other_pk'])
+
+        if profile == other:
+            messages.error(request, "You cannot befriend yourself")
+        else:
+            existing_friend = profile.add_friend(other)
+            if existing_friend:
+                messages.success(request, "You are now friends with {other.first_name}")
+            else:
+                messages.warning(request, "Friendship already exists.")
+        return redirect('profile_detail', pk=profile.pk)
+
+
+    
+
+class ShowFriendSuggestionsView(DetailView):
+    """
+    View to display friend suggestions for a specific Profile.
+    """
+    model = Profile
+    template_name = "mini_fb/friend_suggestions.html"
+    context_object_name = "profile"
+
+    def get_context_data(self, **kwargs):
+        """Pass the friend suggestions list to the template."""
+        context = super().get_context_data(**kwargs)
+        context["friend_suggestions"] = self.object.get_friend_suggestions()
+        return context
+
