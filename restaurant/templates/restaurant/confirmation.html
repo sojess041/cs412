@@ -1,0 +1,52 @@
+{% extends 'restaurant/main.html' %}
+
+{%block content %}
+<div>
+    <h1>Confirmation Page</h1>
+    <p>
+
+        Hi, {{name}}! Thank you for your order. 
+    </p>
+
+    <h2>Order Summary</h2>
+    <br>
+    <ul>
+        {% for item in order_items %}
+            <li>{{ item }}</li>
+        {% endfor %}
+
+
+    </ul>
+
+
+    {% if dessert_items %}
+    <h3>🍰 Dessert Items</h3>
+    <ul>
+        {% for item in dessert_items %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+
+
+    {% endif %}
+
+    <h3>Selected Instructions:</h3>
+    <p>{{ instructions }}</p>
+
+    <h3> Total Price: ${{ total_price }} </h3>
+    <h3>Estimated Ready Time: {{ ready_time }}</h3>
+
+  
+<h3>Customer Information</h3>
+<p>Phone: {{ phone }} </p>
+<p>Email: {{ email }} </p>
+
+<br>
+<p>Thank you for your order!</p>
+</div> 
+
+{% endblock %}
+
+    
+</div>
+

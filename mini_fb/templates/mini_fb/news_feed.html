@@ -1,0 +1,40 @@
+{% extends 'mini_fb/base.html' %}
+
+<!--display the news feed for a single Profile-->
+
+{% block content %}
+
+<h2>News Feed for {{profile.firts_name}}</h2>
+
+{% for status in news_feed %}
+
+
+<div class="status-card" style="border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 5px;">
+
+    <div style="display: flex; align-items: center;">
+        <img src="{{ status.profile.image_file.url }}" alt="{{ status.profile.first_name }}'s Profile Picture" 
+             width="50" height="50" style="border-radius: 50%; margin-right: 10px;">
+        <strong><a href="{% url 'show_profile' pk=status.profile.id %}">
+            {{ status.profile.first_name }} {{ status.profile.last_name }}
+        </a></strong>
+    </div>
+    <p>{{ status.text }}</p>
+    <p><small>Posted on {{ status.created_at }}</small></p>
+
+
+{% for image in status.statusimage_set.all %}
+<img src="{{ image.image.image_file.url }}" alt="Status Image" class="status-image">
+{% endfor %}
+</div>
+
+{% empty %}
+<p>No recent updates from friends.</p>
+{% endfor %}
+
+<div style="margin-top: 20px;">
+<a href="{% url 'show_profile' pk=profile.pk %}" 
+   style="background-color: #007BFF; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">
+    🔙 Back to {{ profile.first_name }}'s Profile
+</a>
+</div>
+{% endblock %}
