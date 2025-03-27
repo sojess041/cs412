@@ -5,12 +5,17 @@ from django.contrib.auth.models import User
 
 
 class Profile(models.Model):
-    "Represent a user's profile "
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile')
     first_name = models.CharField(max_length=50, blank=False)
     last_name = models.CharField(max_length=50, blank=False)
     city = models.CharField(max_length=100, blank=True)
     email = models.EmailField(unique=True)
     image_file = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    
+    # Add bio and location fields
+    bio = models.TextField(blank=True, null=True)  # Add bio field
+    location = models.CharField(max_length=100, blank=True, null=True)  # Add location field
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} ({self.email})'

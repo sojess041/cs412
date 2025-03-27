@@ -3,9 +3,8 @@ from .models import Profile, StatusMessage, Image, StatusImage, Friend
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'city', 'image_file')
-    search_fields = ('first_name', 'last_name', 'email')
-    ordering = ('last_name', 'first_name')
+    list_display = ('user', 'bio', 'location')
+    list_filter = ('user',)
 
 @admin.register(StatusMessage)
 class StatusMessageAdmin(admin.ModelAdmin):

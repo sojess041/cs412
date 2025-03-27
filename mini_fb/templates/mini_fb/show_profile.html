@@ -7,12 +7,12 @@
     <p>City: {{ profile.city }}</p>
     <p>Email: {{ profile.email }}</p>
 
-    {% if request.user.is_authenticated and request.user.profile and request.user.profile != profile %}
+    {% if request.user.is_authenticated and request.user.profile and request.user.profile.id and request.user.profile != profile %}
     <form action="{% url 'add_friend' request.user.profile.id profile.id %}" method="get">
-        <button type="submit">➕ Add Friend</button>
+        <button type="submit">+ Add Friend</button>
     </form>
-    
 {% endif %}
+    
 
 
     <h3><a href="{% url 'add_status' profile.pk %}">Add a Status Message</a></h3>
