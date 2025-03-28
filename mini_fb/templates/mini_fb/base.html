@@ -24,7 +24,7 @@ Includes:
 
         {% if user.is_authenticated %}
             <!-- Show when user is logged in -->
-            <span>Welcome, {{ user.username }}!</span>  <!-- Display the logged-in user's username -->
+            <span>Welcome, {{ user.username }}!</span> 
             <br>
             <a href="{% url 'show_all_profiles' %}">All Profiles</a>
             <br>

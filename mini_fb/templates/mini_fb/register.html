@@ -1,12 +1,25 @@
 {% extends 'mini_fb/base.html' %}
-
+<!-- Allows new users to create an account by providing a username and password.-->
 {% block title %}Register{% endblock %}
 
 {% block content %}
   <h2>Register</h2>
+
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+
+    <label for="id_username">Username:</label>
+    {{ form.username }}
+    <p class="help">Up to 150 characters. Use letters, numbers, or @ / . / + / - / _</p>
+
+    <label for="id_password1">Password:</label>
+    {{ form.password1 }}
+    <p class="help">At least 8 characters. Don’t use common or personal info.</p>
+
+    <label for="id_password2">Confirm Password:</label>
+    {{ form.password2 }}
+    <p class="help">Re-enter your password to confirm.</p>
+
     <button type="submit">Register</button>
   </form>
 {% endblock %}
