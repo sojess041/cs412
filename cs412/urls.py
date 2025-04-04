@@ -30,6 +30,7 @@ urlpatterns = [
     path('formdata/', include('formdata.urls')), 
     path('restaurant/', include('restaurant.urls')),
     path('mini_fb/', include('mini_fb.urls')),
+    path('voter_analytics/', include('voter_analytics.urls')), 
     
     
 ] 

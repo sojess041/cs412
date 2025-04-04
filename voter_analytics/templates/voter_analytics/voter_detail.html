@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<!-- Shows detailed information about a single voter-->
+<html>
+<head>
+    <title>Voter Detail</title>
+</head>
+<a href="{% url 'voters' %}">← Voter List</a>
+<nav>
+    <a href="{% url 'home' %}">Home</a> 
+    <a href="{% url 'graphs' %}">View Graphs</a>
+</nav>
+<br>
+<body>
+    <h1>{{ voter.first_name }} {{ voter.last_name }}</h1>
+
+    <p><strong>Address:</strong> {{ voter.street_number }} {{ voter.street_name }}{% if voter.apartment_number %}, Apt {{ voter.apartment_number }}{% endif %}, {{ voter.zip_code }}</p>
+    <p><strong>Precinct:</strong> {{ voter.precinct }}</p>
+    <p><strong>Birth Date:</strong> {{ voter.date_of_birth }}</p>
+    <p><strong>Registration Date:</strong> {{ voter.registration_date }}</p>
+    <p><strong>Party Affiliation:</strong> {{ voter.party }}</p>
+    <p><strong>Voter Score:</strong> {{ voter.voter_score }}</p>
+
+    <h3>Election Participation</h3>
+    <ul>
+        <li>2020 State: {{ voter.voted_2020_state }}</li>
+        <li>2021 Town: {{ voter.voted_2021_town }}</li>
+        <li>2021 Primary: {{ voter.voted_2021_primary }}</li>
+        <li>2022 General: {{ voter.voted_2022_general }}</li>
+        <li>2023 Town: {{ voter.voted_2023_town }}</li>
+    </ul>
+
+    <a target="_blank" href="https://www.google.com/maps/search/?api=1&query={{ voter.street_number }}+{{ voter.street_name }}+{{ voter.zip_code }}">
+        View on Google Maps
+    </a>
+
+    <br><br>
+    
+</body>
+</html>

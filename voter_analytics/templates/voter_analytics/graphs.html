@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- display voters stats using plotly -->
+
+<html>
+<head>
+    <title>Voter Graphs</title>
+</head>
+<nav>
+    <a href="{% url 'home' %}">Home</a>
+</nav>
+<nav>
+   
+    <a href="{% url 'voters' %}">Voter List</a>
+</nav>
+<br>
+<body>
+    <h1>Voter Graphs</h1>
+
+    <div>
+        <h2>Birth Year Distribution</h2>
+        {{ birth_year_graph|safe }}
+    </div>
+
+    <div>
+        <h2>Party Affiliation</h2>
+        {{ party_graph|safe }}
+    </div>
+
+    <div>
+        <h2>Participation in Past Elections</h2>
+        {{ election_graph|safe }}
+    </div>
+
+    <br>
+    <a href="{% url 'voters' %}">← Back to Voter List</a>
+</body>
+</html>
