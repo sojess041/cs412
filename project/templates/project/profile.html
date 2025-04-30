@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Favorites</title>
+  <link rel="stylesheet" href="{% static 'css/project_style.css' %}">
+  <style>
+    body {
+      background: #f9f9f9;
+      font-family: 'Helvetica', 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .profile-header {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .profile-header h1 {
+      font-size: 36px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .username-header {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    .no-favorites {
+      text-align: center;
+      margin-top: 80px;
+      font-size: 20px;
+      color: #666;
+    }
+
+    .sheet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      margin: 0 auto;
+      max-width: 1200px;
+    }
+
+    .back-btn {
+      display: block;
+      margin: 20px auto;
+      padding: 6px 14px;
+      background: #7a5cff;
+      color: white;
+      text-decoration: none;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+      width: fit-content;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .back-btn:hover {
+      background: #5e45d5;
+      transform: translateY(-2px);
+    }
+
+    .friends-list {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .friends-list ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .friends-list li {
+      font-size: 18px;
+      margin: 8px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="username-header">
+  <h2>👤 {{ request.user.username }}</h2>
+</div>
+
+<div class="profile-header">
+  <h1>🎵 My Favorites 🎵</h1>
+</div>
+
+<div>
+  <a href="{% url 'project:sheet_list' %}" class="back-btn">Back to Main</a>
+</div>
+
+{% if favorited_sheets %}
+  <div class="sheet-grid">
+    {% for sheet in favorited_sheets %}
+      <div class="sheet-card">
+        {% if sheet.preview_image %}
+          <div class="sheet-image-wrapper">
+            <img src="{{ sheet.preview_image.url }}" alt="{{ sheet.title }}" class="sheet-preview" />
+          </div>
+        {% endif %}
+        <h4 class="sheet-title">{{ sheet.title }}</h4>
+        <p class="sheet-composer">by {{ sheet.composer }}</p>
+        {% if sheet.pdf_file %}
+          <a href="{{ sheet.pdf_file.url }}" target="_blank" class="view-btn">View Sheet</a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="no-favorites">
+    <p>You haven't favorited any sheets yet!</p>
+    <a href="{% url 'project:sheet_list' %}" class="back-btn">Browse Sheets</a>
+  </div>
+{% endif %}
+
+
+</body>
+</html>

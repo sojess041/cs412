@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🎵 Friend Activity 🎵</title>
+  <link rel="stylesheet" href="{% static 'css/project_style.css' %}">
+  <style>
+    body {
+      background: #f9f9f9;
+      font-family: 'Helvetica', sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      font-size: 24px;
+      color: #333;
+    }
+
+    .sheet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .sheet-card {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .sheet-card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .interaction {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    .back-btn {
+      display: block;
+      margin: 40px auto 0;
+      padding: 10px 20px;
+      background-color: #a084e8;
+      color: white;
+      text-align: center;
+      border-radius: 20px;
+      text-decoration: none;
+      width: fit-content;
+    }
+
+    .comment-box {
+      background: #f0f0ff;
+      padding: 8px;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    .username {
+      font-weight: bold;
+      color: #444;
+    }
+
+    .section-divider {
+      border-top: 2px solid #ddd;
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎵 Friend Activity 🎵</h1>
+
+<!-- FAVORITED -->
+<h2>Favorited Sheets</h2>
+<div class="sheet-grid">
+  {% for entry in favorited %}
+    <div class="sheet-card">
+      {% if entry.sheet.cover_image %}
+        <img src="{{ entry.sheet.cover_image.url }}" alt="{{ entry.sheet.title }}">
+      {% endif %}
+      <h3>{{ entry.sheet.title }}</h3>
+      <p><em>by {{ entry.sheet.composer }}</em></p>
+      <div class="interaction">
+        Favorited by <span class="username">{{ entry.user.username }}</span>
+      </div>
+    </div>
+  {% empty %}
+    <p>No favorite activity from friends yet.</p>
+  {% endfor %}
+</div>
+
+<div class="section-divider"></div>
+
+<!-- RATED -->
+<h2>Rated Sheets</h2>
+<div class="sheet-grid">
+  {% for entry in rated %}
+    <div class="sheet-card">
+      {% if entry.sheet.cover_image %}
+        <img src="{{ entry.sheet.cover_image.url }}" alt="{{ entry.sheet.title }}">
+      {% endif %}
+      <h3>{{ entry.sheet.title }}</h3>
+      <p><em>by {{ entry.sheet.composer }}</em></p>
+      <div class="interaction">
+        Rated <strong>{{ entry.score }}/5</strong> by <span class="username">{{ entry.user.username }}</span>
+      </div>
+    </div>
+  {% empty %}
+    <p>No ratings from friends yet.</p>
+  {% endfor %}
+</div>
+
+<div class="section-divider"></div>
+
+<!-- COMMENTED -->
+<h2>Commented Sheets</h2>
+<div class="sheet-grid">
+  {% for entry in commented %}
+    <div class="sheet-card">
+      {% if entry.sheet.cover_image %}
+        <img src="{{ entry.sheet.cover_image.url }}" alt="{{ entry.sheet.title }}">
+      {% endif %}
+      <h3>{{ entry.sheet.title }}</h3>
+      <p><em>by {{ entry.sheet.composer }}</em></p>
+      <div class="interaction">
+        Comment by <span class="username">{{ entry.user.username }}</span>:
+        <div class="comment-box">“{{ entry.text }}”</div>
+      </div>
+    </div>
+  {% empty %}
+    <p>No comments from friends yet.</p>
+  {% endfor %}
+</div>
+
+<a href="{% url 'project:sheet_list' %}" class="back-btn">Back to Browse</a>
+
+</body>
+</html>

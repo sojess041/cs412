@@ -51,6 +51,7 @@ INSTALLED_APPS = [
   # "blog",
     "mini_fb",
     "voter_analytics", #NEW
+    "project",
     
     
 ]
@@ -148,9 +149,13 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+LOGIN_REDIRECT_URL = '/project/sheets/'
+
+
 import socket
 CS_DEPLOYMENT_HOSTNAME = 'cs-webapps.bu.edu'
 
 if socket.gethostname() == CS_DEPLOYMENT_HOSTNAME:
     STATIC_URL = '/jyuloso/static/'
     MEDIA_URL = '/jyuloso/media/'
+

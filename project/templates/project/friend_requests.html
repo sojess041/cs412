@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Friend Requests</title>
+    <link rel="stylesheet" href="{% static 'css/project_style.css' %}">
+</head>
+<body>
+
+  <h2>Incoming Friend Requests</h2>
+
+{% if incoming_requests %}
+  <ul>
+    {% for request in incoming_requests %}
+      <li class="friend-request-item">
+        <span class="requester-name">{{ request.from_user.username }}</span>
+        <form method="post" action="{% url 'project:accept_friend_request' request.id %}">
+          {% csrf_token %}
+          <button type="submit" class="accept-btn">Accept</button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No friend requests at the moment.</p>
+{% endif %}
+  
+
+<a href="{% url 'project:sheet_list' %}" class="back-btn">Back to Browse</a>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to Piano Pal!</title>
+  <link rel="stylesheet" href="{% static 'css/project_style.css' %}">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+<body>
+  <nav>
+    <a href="{% url 'project:view_users' %}">Users</a> |
+    <a href="{% url 'project:view_friend_requests' %}">Friend Requests</a> |
+    <a href="{% url 'project:profile' %}">Profile</a> |
+    <a href="{% url 'project:status_page' %}">Status Page</a>
+  </nav>
+
+  <a href="{% url 'project:upload_sheet' %}" class="upload-link">Upload New Sheet</a>
+
+  <h1>Piano Pal 🎹</h1>
+
+  {% if user.is_authenticated %}
+    <div style="display: flex; align-items: center; gap: 0.3rem; margin-bottom: 1rem;">
+      <p style="margin: 0; font-style: italic;">Welcome |</p>
+      <form method="post" action="{% url 'project:logout' %}" style="margin: 0;">
+        {% csrf_token %}
+        <button type="submit" style="all: unset; font-style: italic; cursor: pointer; text-decoration: underline; color: inherit;">Logout</button>
+      </form>
+    </div>
+  {% else %}
+    <p>
+      <a href="{% url 'project:login' %}">Login</a> |
+      <a href="{% url 'project:register' %}">Register</a>
+    </p>
+  {% endif %}
+
+  <form method="get">
+    <select name="difficulty">
+      <option value="">All Difficulties</option>
+      {% for d in all_difficulties %}
+        <option value="{{ d }}" {% if request.GET.difficulty == d %}selected{% endif %}>{{ d }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="category">
+      <option value="">All Categories</option>
+      {% for c in all_categories %}
+        <option value="{{ c }}" {% if request.GET.category == c %}selected{% endif %}>{{ c }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Filter</button>
+  </form>
+
+  <hr>
+
+  <div class="sheet-grid">
+    {% for sheet in page_obj %}
+      <div class="sheet-card">
+        <div class="favorite-heart">
+          <button class="favorite-btn" data-sheet-id="{{ sheet.id }}">
+            <span class="heart-icon">
+              {% if sheet.id in user_favorites %}❤️{% else %}🤍{% endif %}
+            </span>
+          </button>
+        </div>
+
+        <div class="sheet-image-wrapper">
+          {% if sheet.preview_image %}
+            <img src="{{ sheet.preview_image.url }}" alt="{{ sheet.title }}" class="sheet-preview" />
+          {% endif %}
+          <span class="badge"
+  style="
+    {% if sheet.difficulty == 'Beginner' %}
+      background: #7ec8e3;
+    {% elif sheet.difficulty == 'Intermediate' %}
+      background: #fdd365;
+    {% elif sheet.difficulty == 'Advanced' %}
+      background: #f67280;
+    {% else %}
+      background: gray;
+    {% endif %}
+    z-index: 20;">
+  {{ sheet.difficulty }}
+</span>
+
+        </div>
+
+        <h4 class="sheet-title">{{ sheet.title }}</h4>
+        <p class="sheet-composer">by {{ sheet.composer }}</p>
+
+        {% if sheet.pdf_file %}
+          <a href="{{ sheet.pdf_file.url }}" target="_blank" class="view-btn">View</a>
+        {% endif %}
+
+        <div class="rating-container">
+          <form action="{% url 'project:rate_sheet' sheet.id %}" method="post" class="star-rating-form" data-sheet-id="{{ sheet.id }}">
+            {% csrf_token %}
+            <div class="star-rating" data-selected="{{ sheet.user_rating }}">
+              {% for i in "12345" %}
+                <span class="star" data-value="{{ forloop.counter }}">&#9733;</span>
+              {% endfor %}
+              <span class="rating-label"></span>
+            </div>
+          </form>
+        </div>
+
+        <a href="{% url 'project:sheet_detail' sheet.id %}" class="comment-btn">💬 Comment</a>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if is_paginated %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <script>
+    const labels = ["Awful", "Bad", "Okay", "Good", "Excellent"];
+
+    document.querySelectorAll('.star-rating').forEach(container => {
+      const form = container.closest('form');
+      const stars = container.querySelectorAll('.star');
+      const label = container.querySelector('.rating-label');
+
+      const initial = parseInt(container.dataset.selected || "0");
+      highlightStars(initial);
+
+      stars.forEach((star, idx) => {
+        star.addEventListener('mouseover', () => highlightStars(idx + 1));
+        star.addEventListener('mouseout', () => highlightStars(container.dataset.selected));
+        star.addEventListener('click', () => {
+          container.dataset.selected = idx + 1;
+          highlightStars(idx + 1);
+          submitRating(form, idx + 1);
+        });
+      });
+
+      function highlightStars(rating) {
+        stars.forEach((s, i) => s.classList.toggle('filled', i < rating));
+        label.textContent = rating > 0 ? labels[rating - 1] : "";
+      }
+
+      function submitRating(form, rating) {
+        const formData = new FormData(form);
+        formData.append('rating', rating);
+        fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+          },
+          body: formData
+        });
+      }
+    });
+  </script>
+
+  <script>
+    const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    document.querySelectorAll('.favorite-btn').forEach(button => {
+      button.addEventListener('click', function (e) {
+        e.preventDefault();
+        const sheetId = this.dataset.sheetId;
+        fetch(`/project/favorite/${sheetId}/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrftoken,
+          },
+        }).then(response => {
+          if (response.ok) {
+            const icon = this.querySelector('.heart-icon');
+            icon.innerHTML = icon.innerHTML.trim() === '❤️' ? '🤍' : '❤️';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<h2>Login</h2>
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/project_style.css' %}">
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Log In</button>
+
+  <p>Don't have an account? <a href="{% url 'project:register' %}">Register</a>
+
+
+</form>

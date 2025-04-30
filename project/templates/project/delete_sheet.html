@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Are you sure you want to delete <strong>{{ object.title }}</strong>?</h2>
+    <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" style="
+          all: unset;
+          color: #1500ff;
+          cursor: pointer;
+          text-decoration: underline;
+          font-style: italic;
+          margin-right: 1rem;
+        ">Yes, delete</button>
+      </form>
+      
+      <a href="{% url 'project:sheet_list' %}" style="
+        color: #1500ff;
+        text-decoration: underline;
+        font-style: italic;
+      ">Cancel</a>
+  </div>
+{% endblock %}
